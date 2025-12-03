@@ -61,13 +61,20 @@ export const DashboardPage = () => {
 
                 <TokenList balance={balance} />
 
-                <div className="mt-8 p-4 bg-blue-900 bg-opacity-30 border border-blue-700 rounded-xl">
-                    <p className="text-blue-300 text-sm flex items-center gap-1">
-                        <IoIosInformationCircle className="inline" />
-                        You're connected to Devnet. Get test SOL from{" "}
-                        <a href="https://faucet.solana.com" target="_blank" rel="noopener noreferrer" className="underline ml-1">
-                            Solana Faucet
-                        </a>
+                <div className="mt-8 p-4 bg-gray-900 border border-gray-800 rounded-xl">
+                    <p className="text-gray-400 text-sm flex items-center gap-2">
+                        <IoIosInformationCircle className="text-[#00FFA3] w-5 h-5 shrink-0" />
+                        <span>
+                            You're connected to Devnet. Get test SOL from{" "}
+                            <a
+                                href="https://faucet.solana.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline text-[#00FFA3]"
+                            >
+                                Solana Faucet
+                            </a>
+                        </span>
                     </p>
                 </div>
             </div>

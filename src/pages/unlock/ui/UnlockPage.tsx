@@ -23,15 +23,13 @@ export const UnlockPage = ({ onUnlock }: UnlockPageProps) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen flex items-center justify-center bg-black p-4">
+            <div className="max-w-md w-full bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-lg">
                 <div className="text-center mb-8">
-                    <div className="w-20 h-20 bg-linear-to-br from-purple-600 to-blue-600 rounded-3xl mx-auto mb-4 flex items-center justify-center">
-                        <span className="text-4xl">
-                            <FaLock />
-                        </span>
+                    <div className="w-20 h-20 bg-gray-800 rounded-3xl mx-auto mb-4 flex items-center justify-center">
+                        <FaLock className="text-[#00FFA3] text-4xl" />
                     </div>
-                    <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
                     <p className="text-gray-400">Unlock your wallet</p>
                 </div>
 
@@ -46,7 +44,7 @@ export const UnlockPage = ({ onUnlock }: UnlockPageProps) => {
                     placeholder="Enter your password"
                     error={error}
                 />
-                <Button onClick={handleUnlock} className="w-full">
+                <Button onClick={handleUnlock} className="w-full mt-2">
                     Unlock Wallet
                 </Button>
             </div>
