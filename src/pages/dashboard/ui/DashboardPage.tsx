@@ -3,6 +3,7 @@ import { useWalletStore, BalanceCard, TokenList } from "../../../entities/wallet
 import { Button, Modal } from "../../../shared";
 import { SendTransaction } from "../../../features/transaction/send";
 import ReceiveTransaction from "../../../features/transaction/receive";
+import { TransactionsList } from "../../../features/transaction/history";
 
 import { IoIosInformationCircle } from "react-icons/io";
 import { FaRepeat } from "react-icons/fa6";
@@ -77,6 +78,8 @@ export const DashboardPage = () => {
                         </span>
                     </p>
                 </div>
+
+                <TransactionsList />
             </div>
 
             <Modal isOpen={showSend} onClose={() => setShowSend(false)} title="Send Transaction">

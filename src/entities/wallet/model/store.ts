@@ -3,12 +3,14 @@ import * as bip39 from "bip39";
 import { Keypair, PublicKey, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { cryptoLib, storageLib } from "../../../shared";
+import type { Transaction } from "../types";
 import { Buffer } from "buffer";
 
 interface WalletState {
     publicKey: string | null;
     isUnlocked: boolean;
     balance: { sol: number; usdc: number; usdt: number };
+    transactions: Transaction[];
     unlock: (password: string) => Promise<boolean>;
     lock: () => void;
     createWallet: (password: string, seedPhrase: string) => Promise<void>;
@@ -16,6 +18,7 @@ interface WalletState {
     deleteWallet: () => Promise<void>;
     refreshBalance: () => Promise<void>;
     getKeypair: (password: string) => Promise<Keypair | null>;
+    fetchTransactions: (limit?: number) => Promise<void>;
 }
 
 export const useWalletStore = create<WalletState>((set, get) => ({
@@ -122,6 +125,30 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         } catch (error) {
             console.error("Failed to get keypair:", error);
             return null;
+        }
+    },
+    transactions: [],
+
+    fetchTransactions: async (limit = 10) => {
+        const { publicKey } = get();
+        if (!publicKey) return;
+
+        try {
+            const connection = new Connection("https://api.devnet.solana.com");
+            const pubKey = new PublicKey(publicKey);
+
+            const signatures = await connection.getSignaturesForAddress(pubKey, { limit });
+
+            const transactions: Transaction[] = signatures.map((sigInfo) => ({
+                signature: sigInfo.signature,
+                status: sigInfo.err ? "Failed" : "Success",
+                blockTime: sigInfo.blockTime ?? null,
+                solscanLink: `https://solscan.io/tx/${sigInfo.signature}?cluster=devnet`,
+            }));
+
+            set({ transactions });
+        } catch (error) {
+            console.error("Failed to fetch transactions:", error);
         }
     },
 }));
