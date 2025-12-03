@@ -62,22 +62,30 @@ export const DashboardPage = () => {
 
                 <TokenList balance={balance} />
 
-                <div className="mt-8 p-4 bg-gray-900 border border-gray-800 rounded-xl">
-                    <p className="text-gray-400 text-sm flex items-center gap-2">
-                        <IoIosInformationCircle className="text-[#00FFA3] w-5 h-5 shrink-0" />
-                        <span>
-                            You're connected to Devnet. Get test SOL from{" "}
-                            <a
-                                href="https://faucet.solana.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline text-[#00FFA3]"
-                            >
-                                Solana Faucet
-                            </a>
-                        </span>
-                    </p>
-                </div>
+                {["devnet", "testnet"].includes(import.meta.env.VITE_SOLANA_NETWORK) && (
+                    <div className="mt-8 p-4 bg-gray-900 border border-gray-800 rounded-xl">
+                        <p className="text-gray-400 text-sm flex items-center gap-2">
+                            <IoIosInformationCircle className="text-[#00FFA3] w-5 h-5 shrink-0" />
+                            <span>
+                                You're connected to{" "}
+                                {import.meta.env.VITE_SOLANA_NETWORK.charAt(0).toUpperCase() + import.meta.env.VITE_SOLANA_NETWORK.slice(1)}
+                                . Get test SOL from{" "}
+                                <a
+                                    href={
+                                        import.meta.env.VITE_SOLANA_NETWORK === "devnet"
+                                            ? "https://faucet.solana.com"
+                                            : "https://faucet.solana.com"
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline text-[#00FFA3]"
+                                >
+                                    Solana Faucet
+                                </a>
+                            </span>
+                        </p>
+                    </div>
+                )}
 
                 <TransactionsList />
             </div>

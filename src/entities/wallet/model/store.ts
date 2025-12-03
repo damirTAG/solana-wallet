@@ -86,13 +86,13 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         if (!publicKey) return;
 
         try {
-            const connection = new Connection("https://api.devnet.solana.com");
+            const connection = new Connection(import.meta.env.VITE_SOLANA_RPC_URL);
             const pubKey = new PublicKey(publicKey);
 
             const solBalance = await connection.getBalance(pubKey);
 
-            const usdcMint = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
-            const usdtMint = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+            const usdcMint = new PublicKey(import.meta.env.VITE_USDC_MINT_ADDRESS);
+            const usdtMint = new PublicKey(import.meta.env.VITE_USDT_MINT_ADDRESS);
 
             let usdcBalance = 0,
                 usdtBalance = 0;
@@ -101,13 +101,17 @@ export const useWalletStore = create<WalletState>((set, get) => ({
                 const usdcAta = await getAssociatedTokenAddress(usdcMint, pubKey);
                 const usdcAccount = await connection.getTokenAccountBalance(usdcAta);
                 usdcBalance = parseFloat(usdcAccount.value.uiAmount?.toString() || "0");
-            } catch (e) {}
+            } catch (e) {
+                console.log("USDC account not found, defaulting to 0");
+            }
 
             try {
                 const usdtAta = await getAssociatedTokenAddress(usdtMint, pubKey);
                 const usdtAccount = await connection.getTokenAccountBalance(usdtAta);
                 usdtBalance = parseFloat(usdtAccount.value.uiAmount?.toString() || "0");
-            } catch (e) {}
+            } catch (e) {
+                console.log("USDT account not found, defaulting to 0");
+            }
 
             set({ balance: { sol: solBalance / LAMPORTS_PER_SOL, usdc: usdcBalance, usdt: usdtBalance } });
         } catch (error) {
