@@ -1,6 +1,6 @@
 # Solana Wallet
 
-![App](<public/img/screen_(iPhone%2012%20Pro).png>)
+<img src="public/img/screen_(iPhone%2012%20Pro).png" alt="App Screenshot" width="17%" height="17%"/>
 
 A minimalistic Solana wallet built with modern frontend technologies, secure storage, and blockchain integration.
 
