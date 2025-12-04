@@ -16,7 +16,7 @@ export const storageLib = {
         });
     },
 
-    save: async (key: string, value: any) => {
+    save: async <T>(key: string, value: T): Promise<IDBValidKey> => {
         const db = await storageLib.openDB();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], "readwrite");
@@ -27,24 +27,24 @@ export const storageLib = {
         });
     },
 
-    get: async (key: string) => {
+    get: async <T>(key: string): Promise<T | undefined> => {
         const db = await storageLib.openDB();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], "readonly");
             const store = transaction.objectStore(STORE_NAME);
             const request = store.get(key);
-            request.onsuccess = () => resolve(request.result);
+            request.onsuccess = () => resolve(request.result as T | undefined);
             request.onerror = () => reject(request.error);
         });
     },
 
-    delete: async (key: string) => {
+    delete: async (key: string): Promise<void> => {
         const db = await storageLib.openDB();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([STORE_NAME], "readwrite");
             const store = transaction.objectStore(STORE_NAME);
             const request = store.delete(key);
-            request.onsuccess = () => resolve(request.result);
+            request.onsuccess = () => resolve();
             request.onerror = () => reject(request.error);
         });
     },

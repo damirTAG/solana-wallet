@@ -7,7 +7,6 @@ const PAGE_SIZE = 10;
 export function TransactionsList() {
     const { transactions, fetchTransactions } = useWalletStore();
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         const loadTransactions = async () => {
@@ -15,11 +14,9 @@ export function TransactionsList() {
             setCurrentPage(1);
         };
         loadTransactions();
-    }, []);
+    }, [fetchTransactions]);
 
-    useEffect(() => {
-        setTotalPages(Math.ceil(transactions.length / PAGE_SIZE) || 1);
-    }, [transactions]);
+    const totalPages = Math.max(Math.ceil(transactions.length / PAGE_SIZE), 1);
 
     const paginatedTransactions = transactions.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
@@ -49,13 +46,16 @@ export function TransactionsList() {
     };
 
     return (
-        <div className="mt-8 p-4 bg-gray-900 border border-gray-800 rounded-xl">
+        <div className="mt-4 p-4 bg-black/40 backdrop-blur-xl border border-green-500/20 rounded-2xl shadow-lg shadow-green-500/10">
             <h3 className="text-white text-lg font-semibold mb-3">Transaction History</h3>
 
             <div className="max-h-80 overflow-y-auto">
                 <ul className="space-y-2">
                     {paginatedTransactions.map((tx) => (
-                        <li key={tx.signature} className="text-gray-300 flex justify-between items-center">
+                        <li
+                            key={tx.signature}
+                            className="flex justify-between items-center bg-black/30 backdrop-blur-md border border-green-500/10 rounded-lg p-2 hover:bg-black/50 transition-all duration-200"
+                        >
                             <a
                                 href={tx.solscanLink}
                                 target="_blank"
@@ -66,7 +66,7 @@ export function TransactionsList() {
                             </a>
                             <span className="flex gap-3 items-center">
                                 {getStatusLabel(tx.status as "Success" | "Failed" | "Pending")}
-                                <span className="text-gray-500 text-xs">
+                                <span className="text-gray-400 text-xs">
                                     {tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : "Pending"}
                                 </span>
                             </span>
@@ -79,7 +79,7 @@ export function TransactionsList() {
                 <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 bg-gray-800 rounded hover:bg-gray-700 disabled:opacity-50"
+                    className="px-3 py-1 bg-black/30 backdrop-blur-md border border-green-500/20 rounded hover:bg-black/50 disabled:opacity-50 transition-all"
                 >
                     Previous
                 </button>
@@ -89,7 +89,7 @@ export function TransactionsList() {
                 <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 bg-gray-800 rounded hover:bg-gray-700 disabled:opacity-50"
+                    className="px-3 py-1 bg-black/30 backdrop-blur-md border border-green-500/20 rounded hover:bg-black/50 disabled:opacity-50 transition-all"
                 >
                     Next
                 </button>

@@ -6,8 +6,8 @@ import { useWalletStore } from "../../../../entities/wallet";
 interface ReceiveTransactionProps {
     onClose?: () => void;
 }
-
-const ReceiveTransaction = (_: ReceiveTransactionProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ReceiveTransaction = (_props: ReceiveTransactionProps) => {
     const { publicKey } = useWalletStore();
     const [copied, setCopied] = useState(false);
 
@@ -18,14 +18,16 @@ const ReceiveTransaction = (_: ReceiveTransactionProps) => {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 p-6 bg-gray-900 rounded-2xl shadow-lg">
-            <div className="relative p-4 bg-gray-800 rounded-2xl flex items-center justify-center shadow-xl">
+        <div className="flex flex-col items-center gap-4 bg-black/40 backdrop-blur-xl rounded-2xl shadow-2xl shadow-green-500/5">
+            <div className="relative p-4 bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-2xl flex items-center justify-center shadow-xl shadow-green-500/10">
                 <QRCodeSVG value={publicKey || ""} size={180} />
             </div>
 
-            <p className="text-sm text-gray-400">Your Wallet Address:</p>
+            <p className="text-sm text-gray-400 font-medium">Your Wallet Address:</p>
 
-            <div className="bg-gray-800 p-3 rounded-xl break-all text-sm text-center w-full max-w-xs">{publicKey}</div>
+            <div className="bg-black/60 backdrop-blur-sm border border-green-500/20 p-3 rounded-xl break-all text-sm text-center w-full max-w-xs text-gray-300 font-mono">
+                {publicKey}
+            </div>
 
             <Button onClick={copyAddress} variant="secondary" className="w-full max-w-xs">
                 {copied ? "✓ Copied!" : "Copy Address"}

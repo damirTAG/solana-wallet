@@ -1,6 +1,6 @@
 # Solana Wallet
 
-<img src="public/img/screen_(iPhone%2012%20Pro).png" alt="App Screenshot" width="17%" height="17%"/>
+<img src="public/img/preview-pc.jpg" alt="App Screenshot" width="100%" height="50%"/>
 
 A minimalistic Solana wallet built with modern frontend technologies, secure storage, and blockchain integration.
 

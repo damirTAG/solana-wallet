@@ -19,12 +19,14 @@ export const Button: React.FC<ButtonProps> = ({
     className = "",
     type = "button",
 }) => {
-    const baseStyles = "px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseStyles = "px-4 py-3 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants: Record<ButtonVariant, string> = {
-        primary: "bg-[#00FFA3] hover:bg-[#00d28b] text-gray-900",
-        secondary: "bg-gray-800 hover:bg-gray-700 text-white",
-        danger: "bg-red-600 hover:bg-red-700 text-white",
+        primary:
+            "bg-green-500/20 border border-green-500/40 text-green-400 hover:bg-green-500/30 hover:border-green-500/60 hover:shadow-lg hover:shadow-green-500/20 active:scale-95",
+        secondary:
+            "bg-black/40 backdrop-blur-sm border border-green-500/20 text-gray-300 hover:border-green-500/40 hover:text-green-400 hover:shadow-lg hover:shadow-green-500/10 active:scale-95",
+        danger: "bg-red-600 border border-red-500/40 text-white hover:bg-red-700 hover:border-red-600 hover:shadow-lg hover:shadow-red-500/20 active:scale-95",
     };
 
     return (

@@ -43,50 +43,65 @@ export const CreateWallet = ({ onClose }: CreateWalletProps) => {
     };
 
     return (
-        <div>
-            {step === 1 && (
-                <>
-                    <Input label="Create Password" type="password" value={password} onChange={setPassword} placeholder="Enter password" />
-                    <Input
-                        label="Confirm Password"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={setConfirmPassword}
-                        placeholder="Confirm password"
-                    />
-                    <Button onClick={generateSeedPhrase} className="w-full" disabled={!password || password !== confirmPassword}>
-                        Generate Seed Phrase
-                    </Button>
-                </>
-            )}
+        <div className="flex items-center justify-center bg-black ">
+            <div className="max-w-lg w-full backdrop-blur-md rounded-2xl shadow-lg">
+                {step === 1 && (
+                    <div className="space-y-4">
+                        <Input
+                            label="Create Password"
+                            type="password"
+                            value={password}
+                            onChange={setPassword}
+                            placeholder="Enter password"
+                        />
+                        <Input
+                            label="Confirm Password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={setConfirmPassword}
+                            placeholder="Confirm password"
+                        />
+                        <Button onClick={generateSeedPhrase} className="w-full" disabled={!password || password !== confirmPassword}>
+                            Generate Seed Phrase
+                        </Button>
+                    </div>
+                )}
 
-            {step === 2 && (
-                <>
-                    <div className="bg-gray-800 p-4 rounded-xl mb-4">
-                        <p className="text-sm text-gray-400 mb-2">Your Seed Phrase (12 words):</p>
-                        <div className="grid grid-cols-3 gap-2">
-                            {seedPhrase.split(" ").map((word, i) => (
-                                <div key={i} className="bg-gray-700 px-3 py-2 rounded text-sm">
-                                    {i + 1}. {word}
-                                </div>
-                            ))}
+                {step === 2 && (
+                    <div className="space-y-4">
+                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl">
+                            <p className="text-sm text-gray-300 mb-2">Your Seed Phrase (12 words):</p>
+                            <div className="grid grid-cols-3 gap-2">
+                                {seedPhrase.split(" ").map((word, i) => (
+                                    <div key={i} className="bg-white/5 backdrop-blur-sm px-3 py-2 rounded text-sm text-gray-100">
+                                        {i + 1}. {word}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
+
+                        <div className="bg-yellow-900 bg-opacity-20 border border-yellow-700 rounded-xl p-4">
+                            <p className="text-yellow-300 text-sm flex items-center gap-2">
+                                <TiWarning /> Write down your seed phrase and store it safely. You'll need it to recover your wallet.
+                            </p>
+                        </div>
+
+                        <label className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={confirmed}
+                                onChange={(e) => setConfirmed(e.target.checked)}
+                                className="accent-green-400"
+                            />
+                            <span className="text-sm text-gray-300">I have saved my seed phrase</span>
+                        </label>
+
+                        <Button onClick={handleCreate} className="w-full" disabled={!confirmed}>
+                            Create Wallet
+                        </Button>
                     </div>
-                    <div className="bg-yellow-900 bg-opacity-30 border border-yellow-700 rounded-xl p-4 mb-4">
-                        <p className="text-yellow-300 text-sm">
-                            <TiWarning className="inline mr-2" /> Write down your seed phrase and store it safely. You'll need it to recover
-                            your wallet.
-                        </p>
-                    </div>
-                    <label className="flex items-center mb-4">
-                        <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} className="mr-2" />
-                        <span className="text-sm text-gray-300">I have saved my seed phrase</span>
-                    </label>
-                    <Button onClick={handleCreate} className="w-full" disabled={!confirmed}>
-                        Create Wallet
-                    </Button>
-                </>
-            )}
+                )}
+            </div>
         </div>
     );
 };

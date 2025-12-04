@@ -3,7 +3,7 @@ import * as bip39 from "bip39";
 import { Keypair, PublicKey, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { cryptoLib, storageLib } from "../../../shared";
-import type { Transaction } from "../types";
+import type { WalletData, Transaction } from "../types";
 import { Buffer } from "buffer";
 
 interface WalletState {
@@ -28,7 +28,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
     unlock: async (password: string) => {
         try {
-            const data: any = await storageLib.get("wallet");
+            const data = (await storageLib.get("wallet")) as WalletData | null;
             if (!data) return false;
             await cryptoLib.decryptPrivateKey(data.encrypted, password, data.salt, data.iv);
             set({ isUnlocked: true, publicKey: data.publicKey });
@@ -94,14 +94,14 @@ export const useWalletStore = create<WalletState>((set, get) => ({
             const usdcMint = new PublicKey(import.meta.env.VITE_USDC_MINT_ADDRESS);
             const usdtMint = new PublicKey(import.meta.env.VITE_USDT_MINT_ADDRESS);
 
-            let usdcBalance = 0,
-                usdtBalance = 0;
+            let usdcBalance = 0;
+            let usdtBalance = 0;
 
             try {
                 const usdcAta = await getAssociatedTokenAddress(usdcMint, pubKey);
                 const usdcAccount = await connection.getTokenAccountBalance(usdcAta);
                 usdcBalance = parseFloat(usdcAccount.value.uiAmount?.toString() || "0");
-            } catch (e) {
+            } catch {
                 console.log("USDC account not found, defaulting to 0");
             }
 
@@ -109,7 +109,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
                 const usdtAta = await getAssociatedTokenAddress(usdtMint, pubKey);
                 const usdtAccount = await connection.getTokenAccountBalance(usdtAta);
                 usdtBalance = parseFloat(usdtAccount.value.uiAmount?.toString() || "0");
-            } catch (e) {
+            } catch {
                 console.log("USDT account not found, defaulting to 0");
             }
 
@@ -121,7 +121,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
     getKeypair: async (password: string) => {
         try {
-            const data: any = await storageLib.get("wallet");
+            const data = (await storageLib.get("wallet")) as WalletData | null;
             if (!data) return null;
             const privateKey = await cryptoLib.decryptPrivateKey(data.encrypted, password, data.salt, data.iv);
             const secretKey = Buffer.from(privateKey, "base64");
@@ -131,6 +131,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
             return null;
         }
     },
+
     transactions: [],
 
     fetchTransactions: async (limit = 10) => {
