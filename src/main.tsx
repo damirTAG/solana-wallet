@@ -1,3 +1,8 @@
+import { Buffer } from "buffer";
+
+// Polyfill Buffer for browser environment (required by @solana/web3.js and bip39)
+globalThis.Buffer = Buffer;
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./assets/styles/index.css";
