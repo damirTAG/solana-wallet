@@ -2,7 +2,7 @@ import { create } from "zustand";
 import * as bip39 from "bip39";
 import { Keypair, PublicKey, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
-import { cryptoLib, storageLib } from "../../../shared";
+import { cryptoLib, storageLib, DecryptionError } from "../../../shared";
 import type { WalletData, Transaction } from "../types";
 import { Buffer } from "buffer";
 
@@ -11,7 +11,7 @@ interface WalletState {
     isUnlocked: boolean;
     balance: { sol: number; usdc: number; usdt: number };
     transactions: Transaction[];
-    unlock: (password: string) => Promise<boolean>;
+    unlock: (password: string) => Promise<{ success: boolean; error?: string }>;
     lock: () => void;
     createWallet: (password: string, seedPhrase: string) => Promise<void>;
     restoreWallet: (password: string, seedOrPrivateKey: string, isPrivateKey: boolean) => Promise<void>;
@@ -29,14 +29,19 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     unlock: async (password: string) => {
         try {
             const data = (await storageLib.get("wallet")) as WalletData | null;
-            if (!data) return false;
+            if (!data) {
+                return { success: false, error: "No wallet found. Please create or restore a wallet." };
+            }
             await cryptoLib.decryptPrivateKey(data.encrypted, password, data.salt, data.iv);
             set({ isUnlocked: true, publicKey: data.publicKey });
             await get().refreshBalance();
-            return true;
+            return { success: true };
         } catch (error) {
             console.error("Unlock failed:", error);
-            return false;
+            if (error instanceof DecryptionError) {
+                return { success: false, error: error.message };
+            }
+            return { success: false, error: "Failed to unlock wallet. Please try again." };
         }
     },
 

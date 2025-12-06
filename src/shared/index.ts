@@ -1,4 +1,5 @@
 export * from "./lib/crypto";
+export { DecryptionError } from "./lib/crypto";
 export * from "./lib/storage";
 
 export * from "./hooks/useToastStore";
