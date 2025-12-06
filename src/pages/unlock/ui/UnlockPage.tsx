@@ -13,11 +13,11 @@ export const UnlockPage = ({ onUnlock }: UnlockPageProps) => {
     const { unlock } = useWalletStore();
 
     const handleUnlock = async () => {
-        const success = await unlock(password);
-        if (success) {
+        const result = await unlock(password);
+        if (result.success) {
             onUnlock();
         } else {
-            setError("Invalid password");
+            setError(result.error || "Invalid password");
         }
     };
 
